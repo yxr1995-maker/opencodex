@@ -95,6 +95,8 @@ const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   "qwen-cloud": "Qwen Cloud",
   siliconflow: "SiliconFlow",
   "tencent-coding-plan": "Tencent Cloud Coding Plan",
+  workbuddy: "WorkBuddy",
+  "workbuddy-ai": "WorkBuddy AI",
   "vercel-ai-gateway": "Vercel AI Gateway",
   vllm: "vLLM",
   litellm: "LiteLLM",

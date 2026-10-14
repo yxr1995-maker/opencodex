@@ -19,6 +19,17 @@ import {
 } from "../adapters/cursor/discovery";
 import { COMMAND_CODE_MODEL_REASONING_EFFORTS } from "./command-code-efforts";
 import { isCanonicalOpenRouterTarget } from "./openrouter-routing";
+import {
+  WORKBUDDY_AI_BASE_URL,
+  WORKBUDDY_AI_MODEL_CONTEXT_WINDOWS,
+  WORKBUDDY_AI_MODEL_IDS,
+  WORKBUDDY_AI_MODEL_REASONING_EFFORTS,
+  WORKBUDDY_BASE_URL,
+  WORKBUDDY_MODEL_CONTEXT_WINDOWS,
+  WORKBUDDY_MODEL_IDS,
+  WORKBUDDY_MODEL_REASONING_EFFORTS,
+  WORKBUDDY_RISK_NOTE,
+} from "../oauth/workbuddy";
 
 export type ProviderAuthKind = "forward" | "oauth" | "key" | "local";
 export type MetadataModelIdNormalize = "case-insensitive";
@@ -2282,6 +2293,40 @@ export const PROVIDER_REGISTRY: readonly ProviderRegistryEntry[] = [
     modelInputModalities: Object.fromEntries(TENCENT_CODING_PLAN_MODELS.map(id => [id, ["text"]])),
     noVisionModels: TENCENT_CODING_PLAN_MODELS,
     note: "Coding tools only. Tencent forbids general API automation, custom backends, and non-interactive batch use.",
+  },
+  {
+    id: "workbuddy",
+    label: "WorkBuddy",
+    adapter: "openai-chat",
+    baseUrl: WORKBUDDY_BASE_URL,
+    authKind: "oauth",
+    oauthId: "workbuddy",
+    defaultModel: "auto",
+    models: [...WORKBUDDY_MODEL_IDS],
+    liveModels: false,
+    modelContextWindows: { ...WORKBUDDY_MODEL_CONTEXT_WINDOWS },
+    modelReasoningEfforts: Object.fromEntries(
+      Object.entries(WORKBUDDY_MODEL_REASONING_EFFORTS).map(([id, efforts]) => [id, [...efforts]]),
+    ),
+    dashboardUrl: "https://www.codebuddy.cn",
+    note: WORKBUDDY_RISK_NOTE,
+  },
+  {
+    id: "workbuddy-ai",
+    label: "WorkBuddy AI",
+    adapter: "openai-chat",
+    baseUrl: WORKBUDDY_AI_BASE_URL,
+    authKind: "oauth",
+    oauthId: "workbuddy-ai",
+    defaultModel: "default-model",
+    models: [...WORKBUDDY_AI_MODEL_IDS],
+    liveModels: false,
+    modelContextWindows: { ...WORKBUDDY_AI_MODEL_CONTEXT_WINDOWS },
+    modelReasoningEfforts: Object.fromEntries(
+      Object.entries(WORKBUDDY_AI_MODEL_REASONING_EFFORTS).map(([id, efforts]) => [id, [...efforts]]),
+    ),
+    dashboardUrl: "https://www.workbuddy.ai",
+    note: WORKBUDDY_RISK_NOTE,
   },
   {
     id: "volcengine",

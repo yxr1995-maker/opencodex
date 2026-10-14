@@ -8,6 +8,7 @@ import { getAccountCredential, getAccountSet, removeAccount, saveAccountCredenti
 import { loginXai, refreshXaiToken, XAI_LOCAL_CLI_DETACH_WARNING, XaiTokenRequestError } from "./xai";
 import { ANTHROPIC_OAUTH_BETA, AnthropicTokenError, loginAnthropic, refreshAnthropicToken } from "./anthropic";
 import { loginKimi, refreshKimiToken } from "./kimi";
+import { loginWorkBuddy, refreshWorkBuddyToken } from "./workbuddy";
 import { loginNous, NousTokenError, refreshNousToken, clearNousRefreshIntent, RefreshIntentIOError } from "./nous";
 import { loginChatGPT, refreshChatGPTToken } from "./chatgpt";
 import { loginAntigravity, refreshAntigravityToken } from "./google-antigravity";
@@ -235,6 +236,22 @@ export const OAUTH_PROVIDERS: Record<string, OAuthProviderDef> = {
     providerConfig: oauthConfig("github-copilot"),
     defaultModel: oauthDefaultModel("github-copilot"),
     // Unofficial Copilot bridge — keep proactive traffic lazy-only (no background guardian spam).
+    defaultRefreshPolicy: "lazy-only",
+  },
+  workbuddy: {
+    // Desktop auth file only. There is no network login; forceLogin still imports locally.
+    login: (ctrl) => loginWorkBuddy(ctrl, "workbuddy"),
+    refresh: (rt, signal, credential) => refreshWorkBuddyToken(rt, signal, credential, "workbuddy"),
+    providerConfig: oauthConfig("workbuddy"),
+    defaultModel: oauthDefaultModel("workbuddy"),
+    // Refreshed tokens stay in memory. Do not background-refresh against Tencent.
+    defaultRefreshPolicy: "lazy-only",
+  },
+  "workbuddy-ai": {
+    login: (ctrl) => loginWorkBuddy(ctrl, "workbuddy-ai"),
+    refresh: (rt, signal, credential) => refreshWorkBuddyToken(rt, signal, credential, "workbuddy-ai"),
+    providerConfig: oauthConfig("workbuddy-ai"),
+    defaultModel: oauthDefaultModel("workbuddy-ai"),
     defaultRefreshPolicy: "lazy-only",
   },
   chatgpt: {

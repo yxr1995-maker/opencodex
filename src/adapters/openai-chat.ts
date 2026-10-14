@@ -25,6 +25,7 @@ import {
   type ResolvedFastPolicy,
 } from "../providers/fastwire";
 import { openaiChatCompletionsUrl } from "./openai-chat-url";
+import { workBuddyChatHeaders } from "../oauth/workbuddy";
 import { stripResponsesOnlyEncryptedMarker } from "./responses-tool-schema";
 import {
   isTranslatorBudgetExceededError,
@@ -85,6 +86,11 @@ function openAIChatTransport(provider: OcxProviderConfig): {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (hasCredential) headers.Authorization = `Bearer ${provider.apiKey}`;
   if (provider.headers) Object.assign(headers, provider.headers);
+  // WorkBuddy's gateway rejects a client it does not recognize (code 10085).
+  // Same openai-chat header slot Kimi uses; these fingerprint headers are
+  // applied last so a stale User-Agent cannot replace WorkBuddy/5.5.6.
+  const workBuddyHeaders = workBuddyChatHeaders(provider);
+  if (workBuddyHeaders) Object.assign(headers, workBuddyHeaders);
   return { url: openaiChatCompletionsUrl(provider.baseUrl), headers, hasCredential };
 }
 
